@@ -43,7 +43,12 @@ bytemuck = ["egui/bytemuck", "dep:bytemuck"]
 
 ## Enable cut/copy/paste to OS clipboard.
 ## If disabled a clipboard will be simulated so you can still copy/paste within the egui app.
-clipboard = ["arboard", "bytemuck", "smithay-clipboard"]
+# NOTE: `smithay-clipboard` intentionally removed. On Wayland it binds its own
+# wl_data_device_manager and creates a second data device on the seat, which GNOME/Mutter
+# prioritizes for drag-and-drop — starving winit's native DnD data device. With it gone,
+# winit owns the sole data device (native Wayland DnD works) and clipboard flows through
+# arboard (X11/XWayland, bridged to Wayland by Mutter).
+clipboard = ["arboard", "bytemuck"]
 
 ## Enable opening links in a browser when an egui hyperlink is clicked.
 links = ["webbrowser"]
